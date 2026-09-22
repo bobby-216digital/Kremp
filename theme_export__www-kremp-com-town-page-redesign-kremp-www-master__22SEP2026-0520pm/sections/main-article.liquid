@@ -41,8 +41,7 @@
     {%- if section.settings.show_author or section.settings.show_date -%}
       <p class="text-theme-light reading-width mx-auto {{ section.settings.heading_align }}">
         {%- if section.settings.show_author -%}
-          Author: {% if article.author == "Chad Kremp" %}<a href="/blogs/the-kremp-florist-blog/chad-kremp-bio">{{ article.author }}</a>{% else %}{{ article.author }}{% endif %}{% if section.settings.show_date %} | {% endif %}
-
+      Written by {% if article.author contains "Kremp" %}<a href="/blogs/the-kremp-florist-blog/chad-kremp-bio">{{ article.author }}</a>{% else %}{{ article.author }}{% endif %}{% if section.settings.show_date %} | {% endif %}
         {%- endif -%}
         {%- if section.settings.show_date -%}
           {{ article.published_at | time_tag: format: 'date' }}

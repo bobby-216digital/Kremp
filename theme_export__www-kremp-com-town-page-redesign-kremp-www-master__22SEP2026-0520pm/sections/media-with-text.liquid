@@ -62,7 +62,7 @@
                    data-natural-width="true"
                    data-description="{{ section.settings.video_description | escape }}">
     {%- if using_video_tag -%}
-      {{ section.settings.video_shopify | video_tag: playsinline: true, autoplay: autoplay, muted: autoplay, controls: true, poster: '', preload: 'metadata' | replace: '<img ', '<img loading="lazy" hidden ' }}
+      {{ section.settings.video_shopify | video_tag: playsinline: true, autoplay: autoplay, muted: autoplay, controls: true, poster: '', preload: 'metadata' | replace: '<img ', '<img alt loading="lazy" hidden ' }}
     {%- else -%}
       <div></div>
     {%- endif -%}
@@ -93,7 +93,7 @@
         {%- assign image_ratio = section.settings.image_aspect_ratio -%}
         <div class="media{% if media_type == 'video' %} absolute{% if section.settings.image_fit == "cover" %} top-0 left-0 h-full{% else %} video-section__media{% endif %} video-played-hidden{% else %} relative{% if section.settings.image_fit == "cover" %} h-full video-section__media--cover{% endif %}{% endif %}"{% if image_ratio != 'natural' %} style="overflow: hidden;"{% endif %}>
           {%- if section.settings.coordinates != blank -%}
-            <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ section.settings.coordinates }}&scale=2&zoom=13&size=600x600&maptype=roadmap&key=AIzaSyDdCrG4Y7tNNTpAXYtz9mV7P7P6DJ1RKsI">
+            <img alt src="https://maps.googleapis.com/maps/api/staticmap?center={{ section.settings.coordinates }}&scale=2&zoom=13&size=600x600&maptype=roadmap&key=AIzaSyDdCrG4Y7tNNTpAXYtz9mV7P7P6DJ1RKsI">
 {%- elsif image != blank -%}
   {%- liquid
     assign custom_alt = image.alt
@@ -175,7 +175,7 @@
                   <div class="section__block section__block--button" {{ block.shopify_attributes }}>
                     {%- if block.settings.button_label != blank %}
                       <a class="{{ block.settings.button_style }}" {% if block.settings.button_link == blank %}role="link" aria-disabled="true"{% else %}href="{{ block.settings.button_link }}"{% endif %}>
-                        {{- block.settings.button_label | escape -}}
+                        {{- block.settings.button_label | escape -}}<span class="sr-only"> about {{ image.alt }}  </span>
                       </a>
                     {%- endif -%}
                   </div>

@@ -65,12 +65,12 @@
               <div class="section__block section__block--buttons md-down:px-gutter inline-flex flex-wrap {% if section.settings.text_align == 'text-start' %} justify-start{% elsif section.settings.text_align == 'text-end' %} justify-end{% else %} justify-center{% endif %}{% if section.settings.mob_center_text %} md-down:center{% endif %}" {{ block.shopify_attributes }}>
                 {%- if block.settings.button_1_label != blank %}
                   <a class="btn {{ block.settings.button_1_style }}" {% if block.settings.button_1_link == blank %}role="link" aria-disabled="true"{% else %}href="{{ block.settings.button_1_link }}"{% endif %}>
-                    {{- block.settings.button_1_label | escape -}}
+                    {{- block.settings.button_1_label | escape -}} <span class="sr-only"> about {{ block.settings.heading }} </span>
                   </a>
                 {%- endif -%}
                 {%- if block.settings.button_2_label != blank %}
                   <a class="btn {{ block.settings.button_2_style }}" {% if block.settings.button_2_link == blank %}role="link" aria-disabled="true"{% else %}href="{{ block.settings.button_2_link }}"{% endif %}>
-                    {{- block.settings.button_2_label | escape -}}
+                    {{- block.settings.button_2_label | escape -}} <span class="sr-only"> about {{ block.settings.heading }} </span>
                   </a>
                 {%- endif -%}
               </div>

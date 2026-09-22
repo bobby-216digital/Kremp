@@ -187,7 +187,7 @@
                         {%- render 'icon-arrow-right' -%}
                       </span>
                       {%- if block.settings.button_label != blank -%}
-                        <span class="pl-4 pr-4 text-h6 mb-0">{{- block.settings.button_label | escape -}}</span>
+                        <span class="pl-4 pr-4 text-h6 mb-0">{{- block.settings.button_label | escape -}}<span class="sr-only"> {{ block.settings.heading | escape }}</span></span>
                       {%- endif -%}
                     </a>
                   </div>

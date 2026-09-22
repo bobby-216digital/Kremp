@@ -41,8 +41,13 @@
       {{- 'general.search.input_label' | t -}}
     </label>
     <script src="{{ 'search-form.js' | asset_url }}" defer="defer"></script>
-    <search-form class="search__form block">
+    <search-form class="search__form block" role="combobox" 
+       aria-expanded="false" aria-label="search controls" 
+       aria-haspopup="listbox" 
+       aria-owns="predictive-search-results"
+       aria-controls="predictive-search-results">
       <input type="hidden" name="options[prefix]" value="last">
+    
       <input type="search"
              class="search__input w-full input js-search-input{% if settings.search_input_font == "heading" %} h6{% endif %}"
              id="{{ id }}"
@@ -69,13 +74,10 @@
                data-delay-after-word-typed="2400"
              {% endif %}
              {% if settings.enable_predictive_search -%}
-               role="combobox"
+               
                autocomplete="off"
                aria-autocomplete="list"
-               aria-controls="predictive-search-results"
-               aria-owns="predictive-search-results"
-               aria-haspopup="listbox"
-               aria-expanded="false"
+               
                spellcheck="false"
              {%- endif -%}>
       {%- capture search_button -%}

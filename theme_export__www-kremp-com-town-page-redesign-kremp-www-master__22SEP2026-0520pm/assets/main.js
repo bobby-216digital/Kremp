@@ -20,6 +20,7 @@ function focusVisiblePolyfill() {
 
     currentFocusedElement = document.activeElement;
     currentFocusedElement.classList.add('is-focused');
+   // currentFocusedElement.setAttribute('aria-selected', 'true');
   }, true);
 }
 

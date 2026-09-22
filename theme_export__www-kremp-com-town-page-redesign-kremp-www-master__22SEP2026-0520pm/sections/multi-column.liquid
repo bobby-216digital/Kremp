@@ -156,7 +156,8 @@
         <div class="container relative">
           <div class="slider" id="slider-{{ section.id }}">
     {%- endif -%}
-
+    <h3 class="sr-only">Global Footer</h3>
+     <h4 class="sr-only">Footer Columns</h4>
     <div class="container">
       <ul
         class="{% if carousel %}slider__grid grid {{ grid_classes }}{% else %} flex flex-wrap{% endif %} gap-x-theme{% if color_scheme == 'none' and carousel == false %} gap-y-12 md:gap-y-6{% else %} gap-y-6{% endif %}"
@@ -277,6 +278,7 @@
                 {%- endif -%}
 
                 {%- if block.settings.text != blank -%}
+                  
                   <div class="card__rte flex-auto rte">
                     {{ block.settings.text }}
                   </div>
