@@ -65,7 +65,7 @@
                     {%- if block.settings.button_label != blank -%}
                       <div class="section__block section__block--button" {{ block.shopify_attributes }}>
                         <a class="{{ block.settings.button_style }}" {% if block.settings.button_link != blank %}href="{{ block.settings.button_link }}"{% else %}role="link" aria-disabled="true"{% endif %}>
-                          {{- block.settings.button_label | escape -}}
+                          {{- block.settings.button_label | escape -}} <span class="sr-only"> about {{ block.settings.heading }} </span>
                         </a>
                       </div>
                     {%- endif -%}

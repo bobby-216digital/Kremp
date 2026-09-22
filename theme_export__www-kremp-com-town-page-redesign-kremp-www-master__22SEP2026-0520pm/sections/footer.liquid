@@ -1,3 +1,4 @@
+<script async src="https://s3.amazonaws.com/phonescript/639822_201608.js"></script>
 <link rel="stylesheet" href="{{ 'footer.css' | asset_url }}" media="print" onload="this.media='all'">
 
 {%- if section.settings.enable_country_selector or section.settings.enable_language_selector -%}
@@ -209,7 +210,7 @@
                           <ul class="footer-menu__links disclosure__content" role="list">
                             {%- for link in block.settings.menu.links -%}
                               <li>
-                                <a href="{{ link.url }}">{{ link.title }}</a>
+                                <a href="{{ link.url }}"><span class="sr-only">go to </span>{{ link.title }}</a>
                               </li>
                             {%- endfor -%}
                           </ul>
@@ -241,7 +242,7 @@
                             <ul class="footer-menu__links disclosure__content" role="list">
                               {%- for link in block.settings.additional_menu.links -%}
                                 <li>
-                                  <a href="{{ link.url }}">{{ link.title }}</a>
+                                  <a href="{{ link.url }}"><span class="sr-only">go to </span>{{ link.title }}</a>
                                 </li>
                               {%- endfor -%}
                             </ul>
@@ -331,7 +332,7 @@
       {%- endif -%}
     </div>
   </div>
-</footer>
+  <h3 class="sr-only">Mini basket</h3>
 
 {% javascript %}
   customElements.whenDefined('details-disclosure').then(() => {

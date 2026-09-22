@@ -807,6 +807,27 @@ position: relative;
       }
     </style>
     <script type="text/javascript" src="//cdn.rlets.com/capture_configs/aef/91c/b0a/02b461b86d75d756be89f82.js" async="async"></script>
+    <style>
+*:focus-visible {outline: 2px solid black !important; border: 2px solid black !important; box-sizing: border-box !important;}
+.sr-only {
+      position: absolute  !important;
+      left: -10000px;
+}
+.skip-link {
+  left: -10000px;
+  padding: 12px;
+  background-color: white;
+  color: black;
+  border: 2px solid black;
+  border-radius: 5px;
+  position: absolute;
+  top: 0px;
+	z-index: 9999999999;
+}
+.skip-link:focus-visible{left: 0px;}
+</style>
+
+    {% render 'flintverse-customize' %}
   </head>
 
   <body
@@ -824,7 +845,7 @@ position: relative;
   </div>
 {% endif %}
 {% endcomment %}
-    <a class="skip-link btn btn--primary visually-hidden" href="#main-content" data-ce-role="skip">
+    <a class="skip-link btn btn--primary visually-hidden" href="#main-content" >
       {{- 'accessibility.skip_to_content' | t -}}
     </a>
 
@@ -2090,7 +2111,142 @@ setInterval(function(){
 },100);
 }
 </script>
+<div
+  id="custom-select-announcer"
+  class="sr-only"
+  role="status"
+  aria-live="assertive"
+  aria-atomic="true"
+></div>
+
+
+<script>
+  //216a11y scripts
+var select = document.querySelector('.quick-nav custom-select');
+const options = Array.from(select.querySelectorAll('[role="option"]'));
+
+
+function getActiveIndexFromId() {
+  const focusedOption = document.querySelector('.is-focused');
+
+  if (!focusedOption || !focusedOption.id) {
+    return 0;
+  }
+
+  const match = focusedOption.id.match(/(\d+)(?!.*\d)/);
+
+  return match ? parseInt(match[1], 10) + 1 : 0;
+}
+
+
+function setActiveOption(index) {
+  const activeOption = options[index];
+  // Force announcement
+  announceOption(activeOption);
+}
+
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+
+  event.preventDefault();
+
+  let activeIndex = getActiveIndexFromId();
+
+
+  
+  setActiveOption(activeIndex);
+});
+
+const announcer = document.getElementById('custom-select-announcer');
+
+function getOptionLabel(option) {
+  return (
+    option.getAttribute('aria-label') ||
+    option.textContent.trim() ||
+    option.getAttribute('data-value') ||
+    ''
+  );
+}
+
+function announceOption(option) {
+  if (!announcer || !option) return;
+
+  const label = getOptionLabel(option);
+  if (!label) return;
+
+  // Clear first so screen readers announce repeated/rapid changes more reliably
+  announcer.textContent = '';
+
+  window.setTimeout(function () {
+    announcer.textContent = label;
+  }, 30);
+}
+</script>
+<script>
+// Forces focus to inputs to add product add-ons
+  var selector = '.sg-spa-carousel label';
+function ModifySelector() {
+    let elements = document.querySelectorAll(selector);
+    for (let i = 0; i < elements.length; i++) {
+          elements[i].setAttribute('tabindex', "0"); 
+    }
+}
+var MaxTime = 30000; var totalTime = 0;
+function IntervalSearch() {
+  let elements = document.querySelectorAll(selector);
+  if (elements.length > 0 ) {
+    ModifySelector();
+  } else if(totalTime < MaxTime) {
+    setTimeout(IntervalSearch, 20);
+	  totalTime += 20;
+  }
+}
+//IntervalSearch();
+  //end 216a11y scripts
+</script>
 
 
 </body>
 </html>
+
+{% if page.handle == 'meet-chad-kremp' %}
+<script type="application/ld+json" class="schemantra">{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "Person",
+  "additionalName": "Chad Kremp",
+  "additionalType": "https://www.kremp.com/pages/meet-chad-kremp",
+  "address": "220 Davisville Rd Willow Grove, PA 19090",
+  "alternateName": "Chad Kremp",
+  "email": "contactus@kremp.com",
+  "identifier": "https://www.kremp.com/pages/meet-chad-kremp",
+  "image": "https://cdn.shopify.com/s/files/1/0612/6410/1454/files/author_photo_639822_67815154.webp?v=1786458556",
+  "jobTitle": "Vice President of Sales at Kremp Florist",
+  "knowsAbout": "Roses and specialty rose gifts",
+  "url": "https://www.kremp.com/pages/meet-chad-kremp",
+  "name": "Chad Kremp",
+  "telephone": "1 (800) 345-7367"
+}</script>
+{% endif %}
+
+{% if page.handle == '/collections/anniversary' %}
+<script type="application/ld+json" class="schemantra">{
+"@context": "https://schema.org",
+"@type": "Product",
+"name": "Anniversary Flowers Philadelphia",
+"description": "Celebrate your special milestones with beautiful anniversary flowers and custom floral arrangements delivered fresh in Philadelphia, PA.",
+"image": "https://www.kremp.com/cdn/shop/collections/anniversary.jpg",
+"brand": {
+"@type": "Brand",
+"name": "Kremp Florist"
+},
+"offers": {
+"@type": "AggregateOffer",
+"priceCurrency": "USD",
+"lowPrice": "49.99",
+"highPrice": "199.99",
+"offerCount": "24",
+"areaServed": "Philadelphia, PA"
+}
+}</script>
+{% endif %}

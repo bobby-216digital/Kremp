@@ -102,7 +102,7 @@
               {%- if section.settings.button_label != blank -%}
                 <div class="section__block section__block--button">
                   <a class="relative {{ section.settings.button_style }}{% if section.settings.button_style != 'link' %} btn--arrow-with-text{% endif %}" {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% else %}role="link" aria-disabled="true"{% endif %}>
-                    {{- section.settings.button_label | escape -}}
+                    {{- section.settings.button_label | escape -}} <span class="sr-only"> about {{ block.settings.heading }} </span>
                   </a>
                 </div>
               {%- endif -%}

@@ -35,9 +35,9 @@
       <li class="custom-select__option quick-nav__option text-start flex items-center js-option{% if display contains "image" and is_collection and settings.blend_collection_images %} image-blend{% elsif display contains "image" and link.type == "product_link" and settings.blend_product_images %} image-blend{% endif %}"
           id="{{ id }}-opt-{{ counter }}" role="option"
           data-value="{{ link.handle }}"
-          data-url="{{ link.url }}"
+          data-url="{{ link.url }}" aria-selected="false" 
           {% if is_collection %}data-is-collection="true"{% endif %}
-          {% if display == "image" %} aria-label="{{ link.title | escape }}"{% endif %}>
+           ><span class="sr-only">{{ link.title | escape }}</span>
         <span class="quick-nav__option-content flex items-center pointer-events-none{% if display == "image" %} justify-center{% endif %}">
           {%- if display contains "image" -%}
             {%- liquid
@@ -56,12 +56,12 @@
             {%- unless image contains "Liquid error" -%}
               <div{% if boxed %} class="md:hidden"{% endif %}>
                 <div class="media relative quick-nav__img-thumb" style="padding-top: {{ 1 | divided_by: image_ratio | times: 100 }}%;">
-                  <img src="{{ image_object | default: link.object | image_url: width: small_image_size }}" class="img-fit{% if image_fit == "contain" %} img-fit--contain{% endif %}" loading="lazy" width="{{ small_image_size }}" height="{{ small_image_size | divided_by: image_ratio | round }}"/>
+                  <img alt src="{{ image_object | default: link.object | image_url: width: small_image_size }}" class="img-fit{% if image_fit == "contain" %} img-fit--contain{% endif %}" loading="lazy" width="{{ small_image_size }}" height="{{ small_image_size | divided_by: image_ratio | round }}"/>
                 </div>
               </div>
               {%- if boxed -%}
                 <div class="media relative quick-nav__img-thumb hidden md:block" style="padding-top: {{ 1 | divided_by: image_ratio | times: 100 }}%;">
-                  <img src="{{ image_object | default: link.object | image_url: width: large_image_size }}" class="img-fit{% if image_fit == "contain" %} img-fit--contain{% endif %}" loading="lazy" width="{{ large_image_size }}" height="{{ large_image_size | divided_by: image_ratio | round }}"/>
+                  <img alt src="{{ image_object | default: link.object | image_url: width: large_image_size }}" class="img-fit{% if image_fit == "contain" %} img-fit--contain{% endif %}" loading="lazy" width="{{ large_image_size }}" height="{{ large_image_size | divided_by: image_ratio | round }}"/>
                 </div>
               {%- endif -%}
             {%- endunless -%}
@@ -105,12 +105,12 @@
                 {%- unless image contains "Liquid error" -%}
                   <div{% if boxed %} class="md:hidden"{% endif %}>
                     <div class="media relative quick-nav__img-thumb" style="padding-top: {{ 1 | divided_by: image_ratio | times: 100 }}%;">
-                      <img src="{{ image_object | default: child_link.object | image_url: width: small_image_size }}" class="img-fit{% if image_fit == "contain" %} img-fit--contain{% endif %}" loading="lazy" width="{{ small_image_size }}" height="{{ small_image_size | divided_by: image_ratio | round }}"/>
+                      <img alt src="{{ image_object | default: child_link.object | image_url: width: small_image_size }}" class="img-fit{% if image_fit == "contain" %} img-fit--contain{% endif %}" loading="lazy" width="{{ small_image_size }}" height="{{ small_image_size | divided_by: image_ratio | round }}"/>
                     </div>
                   </div>
                   {%- if boxed -%}
                     <div class="media relative quick-nav__img-thumb hidden md:block" style="padding-top: {{ 1 | divided_by: image_ratio | times: 100 }}%;">
-                      <img src="{{ image_object | default: child_link.object | image_url: width: large_image_size }}" class="img-fit{% if image_fit == "contain" %} img-fit--contain{% endif %}" loading="lazy" width="{{ large_image_size }}" height="{{ large_image_size | divided_by: image_ratio | round }}"/>
+                      <img alt src="{{ image_object | default: child_link.object | image_url: width: large_image_size }}" class="img-fit{% if image_fit == "contain" %} img-fit--contain{% endif %}" loading="lazy" width="{{ large_image_size }}" height="{{ large_image_size | divided_by: image_ratio | round }}"/>
                     </div>
                   {%- endif -%}
                 {%- endunless -%}
@@ -153,12 +153,12 @@
                   {%- unless image contains "Liquid error" -%}
                     <div{% if boxed %} class="md:hidden"{% endif %}>
                       <div class="media relative quick-nav__img-thumb" style="padding-top: {{ 1 | divided_by: image_ratio | times: 100 }}%;">
-                        <img src="{{ image_object | default: grandchild_link.object | image_url: width: small_image_size }}" class="img-fit{% if image_fit == "contain" %} img-fit--contain{% endif %}" loading="lazy" width="{{ small_image_size }}" height="{{ small_image_size | divided_by: image_ratio | round }}"/>
+                        <img alt src="{{ image_object | default: grandchild_link.object | image_url: width: small_image_size }}" class="img-fit{% if image_fit == "contain" %} img-fit--contain{% endif %}" loading="lazy" width="{{ small_image_size }}" height="{{ small_image_size | divided_by: image_ratio | round }}"/>
                       </div>
                     </div>
                     {%- if boxed -%}
                       <div class="media relative quick-nav__img-thumb hidden md:block" style="padding-top: {{ 1 | divided_by: image_ratio | times: 100 }}%;">
-                        <img src="{{ image_object | default: grandchild_link.object | image_url: width: large_image_size }}" class="img-fit{% if image_fit == "contain" %} img-fit--contain{% endif %}" loading="lazy" width="{{ large_image_size }}" height="{{ large_image_size | divided_by: image_ratio | round }}"/>
+                        <img alt src="{{ image_object | default: grandchild_link.object | image_url: width: large_image_size }}" class="img-fit{% if image_fit == "contain" %} img-fit--contain{% endif %}" loading="lazy" width="{{ large_image_size }}" height="{{ large_image_size | divided_by: image_ratio | round }}"/>
                       </div>
                     {%- endif -%}
                   {%- endunless -%}

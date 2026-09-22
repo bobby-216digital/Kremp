@@ -171,8 +171,8 @@
     {%- endif -%}
 
     {%- if zoom != 'off' -%}
-      <div class="loading-spinner loading-spinner--out" role="status">
-        <span class="sr-only">{{ 'accessibility.loading' | t }}</span>
+      <div class="loading-spinner loading-spinner--out" role="status" aria-label="{{ 'accessibility.loading' | t }}">
+        
       </div>
     {%- endif -%}
   </div>

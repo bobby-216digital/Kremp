@@ -64,7 +64,7 @@
 
 <article class="card hover:grow-media card--article h-full{% if featured %} card--featured card--wide{% endif %} relative flex{% unless featured %} flex-col{% endunless %}{% if featured_section %} justify-between{% endif %}{% if color_scheme and color_scheme != "none" %} color-scheme color-scheme--{{ color_scheme }}{% if featured_section %} h-full{% endif %}{% endif %}">
   {%- unless show_image == false -%}
-    <a href="{{ article.url }}" class="card__media relative">
+    <a href="{{ article.url }}" class="card__media relative"><span class="sr-only">{{ article.title }}</span>
       {%- if article and article.image -%}
         {% unless featured %}<div class="media block relative h-full" tabindex="-1" style="padding-top: {{ 1 | divided_by: image_ratio | times: 100 }}%;">{% endunless %}
         {%- liquid
@@ -100,7 +100,7 @@
           {%- for tag in article.tags -%}
             {%- if blog.url -%}
               <a href="{{ tag | link_to_tag: tag | split: 'href="' | last | split: '"' | first }}" class="text-current text-theme-light">
-                {{ tag }}{% unless forloop.last %}, {% endunless %}
+                {{ tag }}{% unless forloop.last %}, {% endunless %}<span class="sr-only"> tag</span>
               </a>
             {%- else -%}
               {{ tag }}{% unless forloop.last %}, {% endunless %}

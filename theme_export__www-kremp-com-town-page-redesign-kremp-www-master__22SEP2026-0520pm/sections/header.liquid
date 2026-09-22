@@ -282,7 +282,7 @@
                         {% endif %}
                       >
                         <summary class="main-nav__item--toggle relative js-nav-hover js-toggle">
-                          <a
+                          <span
                             class="main-nav__item main-nav__item--primary main-nav__item-content{% if link.current %} is-active{% endif %}{% if featured_links contains link_title_downcase %} main-nav__link--featured{% endif %}"
                             href="{{ link.url }}"
                             {% if link.current %}
@@ -291,7 +291,7 @@
                           >
                             {{ link.title | escape -}}
                             {%- render 'icon-chevron-down' %}
-                          </a>
+                          </span>
                         </summary>
                         {%- liquid
                           assign child_nav_classes = ''
@@ -478,7 +478,7 @@
                                     {% endif %}
                                   >
                                     <details open>
-                                      <summary class="child-nav__item--toggle main-nav__item--toggle relative{% if mega_nav %} js-no-toggle-md{% if mega_nav_has_columns and mega_nav.settings.show_underline == false %} nav__item--no-underline{% endif %}{% if mega_nav.type == "sidebar" %} js-sidebar-hover{% if forloop.first %} is-visible{% endif %}{% endif %}{% endif %}">
+                                      <summary  class="child-nav__item--toggle main-nav__item--toggle relative{% if mega_nav %} js-no-toggle-md{% if mega_nav_has_columns and mega_nav.settings.show_underline == false %} nav__item--no-underline{% endif %}{% if mega_nav.type == "sidebar" %} js-sidebar-hover{% if forloop.first %} is-visible{% endif %}{% endif %}{% endif %}">
                                         <div class="main-nav__item-content{% if mega_nav.settings.collection_images != 'none' %} child-nav__collection-image w-full{% endif %}">
                                           {%- if collection_image -%}
                                             {%- liquid
@@ -920,7 +920,7 @@
         const isLargeScreen = window.matchMedia(theme.mediaQueries.md).matches;
         this.disclosure.open = isLargeScreen;
         if (isLargeScreen) {
-          this.toggle.setAttribute('tabindex', '-1');
+          this.toggle.setAttribute('tabindex', '0');
         } else {
           this.toggle.removeAttribute('tabindex');
         }

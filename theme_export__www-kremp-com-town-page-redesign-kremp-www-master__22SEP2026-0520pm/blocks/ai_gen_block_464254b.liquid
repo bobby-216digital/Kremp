@@ -1,0 +1,222 @@
+{% doc %}
+  @prompt
+    Add a custom badge overlay to product cards on the collection page only. The badge should: appear in the lower-right corner of the product image, display text stored in a product metafield called custom.badge_label, use the theme's accent color as the background with white text, have a slightly rounded rectangle shape (not a full pill), and only render when the metafield has a value. The badge should not appear on product detail pages — collection grid cards only. Style it to look premium and not obstruct the main product image significantly.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-custom-badge-overlay-{{ ai_gen_id }} {
+    display: block;
+  }
+
+  .ai-custom-badge-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: {{ block.settings.badge_offset }}px;
+    right: {{ block.settings.badge_offset }}px;
+    background-color: {{ block.settings.badge_bg_color }};
+    color: {{ block.settings.badge_text_color }};
+    padding: {{ block.settings.badge_padding_vertical }}px {{ block.settings.badge_padding_horizontal }}px;
+    border-radius: {{ block.settings.badge_border_radius }}px;
+    font-size: {{ block.settings.badge_font_size }}px;
+    font-weight: {{ block.settings.badge_font_weight }};
+    text-transform: {{ block.settings.badge_text_transform }};
+    letter-spacing: {{ block.settings.badge_letter_spacing }}px;
+    z-index: 2;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-custom-badge-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.badge_font_size }}px * 0.9);
+      padding: calc({{ block.settings.badge_padding_vertical }}px * 0.85) calc({{ block.settings.badge_padding_horizontal }}px * 0.85);
+      bottom: calc({{ block.settings.badge_offset }}px * 0.8);
+      right: calc({{ block.settings.badge_offset }}px * 0.8);
+    }
+  }
+{% endstyle %}
+
+<custom-badge-overlay-{{ ai_gen_id }}
+  class="ai-custom-badge-overlay-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  {% if product.metafields.custom.badge_label != blank %}
+    <span class="ai-custom-badge-{{ ai_gen_id }}">
+      {{ product.metafields.custom.badge_label }}
+    </span>
+  {% endif %}
+</custom-badge-overlay-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class CustomBadgeOverlay{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        const badge = this.querySelector('.ai-custom-badge-{{ ai_gen_id }}');
+        if (!badge) return;
+
+        const productCard = this.closest('.product-item, .product-card, [class*="product"]');
+        if (!productCard) return;
+
+        const imageContainer = productCard.querySelector('.product-item__image-container, .product-card__image, [class*="image"]');
+        if (!imageContainer) return;
+
+        const existingBadge = imageContainer.querySelector('.ai-custom-badge-{{ ai_gen_id }}');
+        if (existingBadge) return;
+
+        imageContainer.style.position = 'relative';
+        imageContainer.appendChild(badge);
+      }
+    }
+
+    customElements.define('custom-badge-overlay-{{ ai_gen_id }}', CustomBadgeOverlay{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Custom badge overlay",
+  "tag": null,
+  "class": "custom-badge-block",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Badge style"
+    },
+    {
+      "type": "paragraph",
+      "content": "This badge displays text from the product metafield custom.badge_label. It appears only on collection page product cards when the metafield has a value."
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Background",
+      "default": "#004275"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "badge_font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "badge_font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semibold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "select",
+      "id": "badge_text_transform",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "badge_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 3,
+      "step": 0.5,
+      "unit": "px",
+      "default": 0.5
+    },
+    {
+      "type": "header",
+      "content": "Badge spacing"
+    },
+    {
+      "type": "range",
+      "id": "badge_padding_vertical",
+      "label": "Vertical padding",
+      "min": 2,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "badge_padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "badge_border_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "badge_offset",
+      "label": "Distance from corner",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom badge overlay"
+    }
+  ]
+}
+{% endschema %}

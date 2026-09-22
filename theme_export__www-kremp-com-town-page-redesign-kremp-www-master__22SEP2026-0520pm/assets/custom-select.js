@@ -23,6 +23,7 @@ if (!customElements.get('custom-select')) {
       this.searchString = '';
       this.listboxOpen = false;
       this.selectedOption = this.querySelector('[aria-selected="true"]');
+      
 
       // Set the selected option.
       if (!this.selectedOption) {
@@ -300,7 +301,7 @@ if (!customElements.get('custom-select')) {
       // Set focus on the option.
       this.focusedOption = option;
       this.focusedOption.classList.add(this.focusedClass);
-
+     // this.focusedOption.setAttribute('aria-selected', 'true');
       // If option is out of view, scroll the list.
       if (this.listbox.scrollHeight > this.listbox.clientHeight) {
         const scrollBottom = this.listbox.clientHeight + this.listbox.scrollTop;

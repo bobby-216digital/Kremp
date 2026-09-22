@@ -2283,12 +2283,12 @@ img {
   vertical-align: top;
 }
 
-[loading=lazy] {
+imgimg[loading=lazy] {
   transition: opacity 0.5s ease-out;
   opacity: 1;
 }
 
-[loading=lazy]:not([src]) {
+imgimgimg[loading=lazy]:not([src]) {
   opacity: 0;
 }
 
@@ -3291,6 +3291,7 @@ details-disclosure+details-disclosure .disclosure--row {
 
 .main-nav__item--toggle .main-nav__item--primary {
   align-items: flex-end;
+      text-decoration: underline;
 }
 
 .main-nav__item--toggle .icon {

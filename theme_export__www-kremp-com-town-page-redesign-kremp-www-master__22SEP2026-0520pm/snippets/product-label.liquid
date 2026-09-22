@@ -180,6 +180,18 @@
       </div>
     {%- endif -%}
   {%- endif -%}
+{%- unless request.page_type == 'product' -%}
+  {%- if label_count < limit and product.metafields.custom.badge_label != blank -%}
+    {%- assign label_count = label_count | plus: 1 -%}
+    <div class="product-label-wrapper flex justify-end">
+      <span class="product-label product-label--new" style="background-color: #9df3b6ff; color: #1a2744; border-radius: 4px;">
+        {{ product.metafields.custom.badge_label }}
+      </span>
+    </div>
+  {%- endif -%}
+{%- endunless -%}
+
+
 {%- endcapture -%}
 
 {%- if product_label != blank -%}

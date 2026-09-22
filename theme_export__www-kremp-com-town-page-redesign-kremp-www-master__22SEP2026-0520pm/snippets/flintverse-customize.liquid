@@ -1,0 +1,462 @@
+{% if template.name == 'collection' or template.name == 'search' %}
+<style>
+  #fdt-container{
+    font-family: inherit;
+  }
+
+  #fdt-container{
+    --fdt-color-base-text: var(--shopify-editor-setting-text_color-format-rgb);
+    --fdt-color-foreground: var(--shopify-editor-setting-text_color-format-rgb);
+    --fdt-color-sub-title: var(--shopify-editor-setting-heading_color-format-rgb);
+    --fdt-toolbar-text-color: var(--shopify-editor-setting-text_color-format-rgb);
+  }
+
+  #fdt-container .search-filters__product-title {
+    font-family: inherit;
+    color: rgb(var(--shopify-editor-setting-heading_color-format-rgb));
+    font-weight: 900;
+  }
+
+  #fdt-container .search-filters__product-price {
+    color: rgb(var(--shopify-editor-setting-text_color-format-rgb));
+  }
+
+  #fdt-container .search-filters__sort-button {
+    border:1px solid #004275 ;
+  }
+
+  #fdt-container .fdt-range-value input *, #fdt-container .fdt-range-value input{
+    background-color: rgb(var(--fdt-toolbar-background-color)); 
+    color: rgb(var(--fdt-toolbar-text-color)); 
+  }
+  
+  #fdt-container .fdt-range-selected {
+    background-color: #004275;
+  }
+
+  #fdt-container .fdt-selector-element:has(input[type="radio"]:checked) ,
+   #fdt-container .fdt-swatch-wrapper .fdt-primary-button  {
+  background-color: #004275;
+}
+
+  #fdt-container #metafield_custom_shipping_type-Shipping\ Type-target-option {
+    display: none;
+  }
+  #fdt-container .search-filters__filter-tree-option-list .wfl-plp-zip__headline,
+  #fdt-container .fdt-offcanvas-content-option-list .wfl-plp-zip__headline {
+    color: #fff;
+  }
+  .fdt-overflow-hidden-offcanvas .cc-header--sticky, .fdt-overflow-hidden-offcanvas .announcement {
+    display: none;
+  }
+
+  #fdt-container .search-filters__filter-wrapper {
+    width:245px;
+  }
+  #fdt-container .fdt-option-item-count {
+    overflow-wrap: break-word;
+  }
+  #fdt-container .search-filters__filter-tree-header {
+    display: none;
+  }
+
+  #fdt-container .fdt-collection-search__title,
+  #fdt-container .search-filters__filter-option-title {
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+  @media (min-width: 768px) and (max-width: 1199px) {
+  #fdt-container .search-filters__filter-wrapper {
+    width: 190px ;
+  }
+}
+  
+</style>  
+<script>
+  (function() {
+    if (!customElements.get('fdt-zip-code-filter')) {
+      let lastAppliedZip = null;
+      class ZipCodeFilter extends HTMLElement {
+        constructor() {
+          super();
+        }
+
+        connectedCallback() {
+          const refineBtn = this.querySelector('[data-refine-btn]');
+          this.boundHandleRefine = this.handleRefine.bind(this);
+          if (refineBtn) {
+            refineBtn.addEventListener('click', this.boundHandleRefine);
+          }
+          this.boundApplySavedZip = this.applySavedZip.bind(this);
+          document.addEventListener('findter-sidebar-render-after', this.boundApplySavedZip);
+        }
+
+        disconnectedCallback() {
+          const refineBtn = this.querySelector('[data-refine-btn]');
+          if (refineBtn) {
+            refineBtn.removeEventListener('click', this.boundHandleRefine);
+          }
+          document.removeEventListener('findter-sidebar-render-after', this.boundApplySavedZip);
+        }
+
+        // Copy code overide.js
+        isDomesticZip(zip) {
+          const zipNum = parseInt(zip);
+          if (isNaN(zipNum)) return false;
+          if (zipNum < 501 || zipNum > 99950) return false;
+          if (zipNum >= 96910 && zipNum <= 96932) return false;
+          if (zipNum >= 600 && zipNum <= 799) return false;
+          if (zipNum >= 900 && zipNum <= 999) return false;
+          if (zipNum === 96799) return false;
+          if (zipNum >= 96950 && zipNum <= 96952) return false;
+          if (zipNum >= 800 && zipNum <= 899) return false;
+          if (zipNum >= 9001 && zipNum <= 9910) return false;
+          if (zipNum >= 96200 && zipNum <= 96645) return false;
+          if (zipNum >= 34038 && zipNum <= 34078) return false;
+
+          const excludedZips = [34007, 34009, 34010, 34058, 34080, 34081, 34082, 34083, 34084, 34085, 34086, 34087, 34088, 34089, 34090, 34091, 34092, 34093, 34094, 34095];
+          if (excludedZips.includes(zipNum)) return false;
+
+          const militaryZips = [96212, 96269, 96306, 96310, 96311, 96315, 96321, 96322, 96346, 96347, 96349, 96350, 96351, 96362, 96370, 96371, 96372, 96373, 96374, 96375, 96377, 96379, 96380, 96382, 96384, 96385, 96387, 96388, 96389, 96510, 96511, 96516, 96517, 96522, 96531, 96534, 96537, 96540, 96542, 96543, 96578, 96595, 96598, 96601, 96602, 96603, 96604, 96605, 96606, 96607, 96608, 96609, 96610, 96611, 96612, 96613, 96615, 96616, 96617, 96619, 96620, 96628, 96629, 96632, 96643, 96649, 96650, 96657, 96660, 96661, 96662, 96663, 96664, 96665, 96666, 96667, 96668, 96669, 96670, 96671, 96672, 96673, 96674, 96675, 96677, 96678, 96679, 96681, 96682, 96683, 96686, 96691, 96692, 96693, 96694, 96695, 96696, 96698];
+          if (militaryZips.includes(zipNum)) return false;
+
+          const militaryZipStrings = ["09204", "09216", "09241", "09266", "09363", "09410", "09424", "09501", "09502", "09503", "09504", "09505", "09506", "09507", "09508", "09509", "09510", "09511", "09512", "09513", "09514", "09516", "09517", "09520", "09522", "09523", "09524", "09532", "09534", "09543", "09550", "09554", "09556", "09564", "09565", "09566", "09567", "09568", "09569", "09570", "09573", "09574", "09575", "09576", "09577", "09578", "09579", "09581", "09582", "09583", "09586", "09587", "09588", "09589", "09590", "09591", "09592", "09593", "09594", "09595", "09596", "09599", "09607", "09608", "09609", "09617", "09618", "09620", "09621", "09622", "09623", "09625", "09626", "09627", "09631", "09636", "09645", "09647", "09648", "09649", "09712", "09729", "09733", "09761", "09805", "09834", "09837", "09838", "09859", "09865", "09902"];
+          if (militaryZipStrings.includes(zip.toString().padStart(5, '0'))) return false;
+
+          return true;
+        }
+
+        getShippingTypesByZip(zip) {
+          const isLocal = window.localZipCodes && 
+                          Array.isArray(window.localZipCodes) && 
+                          window.localZipCodes.includes(zip);
+          const isDomestic = this.isDomesticZip(zip);
+
+          if (isLocal) {
+            return ['Direct Floral', 'Direct Ship', 'Non-Direct Ship', 'Exclusive'];
+          } else if (isDomestic) {
+            return ['Direct Floral', 'Direct Ship', 'Non-Direct Ship'];
+          } else {
+            return ['Direct Ship', 'Non-Direct Ship'];
+          }
+        }
+        // end
+
+        updateShippingCheckboxes(typesToCheck) {
+          const checkboxes = document.querySelectorAll('input[name="metafield_custom_shipping_type"]');
+          checkboxes.forEach(cb => {
+            const shouldBeChecked = typesToCheck.includes(cb.value);
+            if (cb.checked !== shouldBeChecked) {
+              cb.checked = shouldBeChecked;
+              cb.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+          });
+        }
+
+        applyZip(zip) {
+          const types = this.getShippingTypesByZip(zip);
+          this.updateShippingCheckboxes(types);
+          localStorage.setItem('zipCode', zip);
+          lastAppliedZip = zip;
+        }
+
+        handleRefine(event) {
+          event.preventDefault();
+          const input = this.querySelector('[data-zip-input]');
+          if (!input) return;
+          const zip = input.value.trim();
+          if (!zip) return;
+          this.applyZip(zip);
+        }
+
+        applySavedZip() {
+          const savedZip = localStorage.getItem('zipCode');
+          if (!savedZip) return;
+
+          const input = this.querySelector('[data-zip-input]');
+          if (input) {
+            input.value = savedZip;
+          }
+
+          // Render-triggered re-application only; skip once this zip is already
+          // reflected in the checkboxes, otherwise each render re-dispatches
+          // `input` events that trigger another render, looping forever.
+          if (savedZip === lastAppliedZip) return;
+          this.applyZip(savedZip);
+        }
+      }
+
+      customElements.define('fdt-zip-code-filter', ZipCodeFilter);
+    }
+
+    const zipCodeFilter = `
+    <fdt-zip-code-filter>
+        <form id="zip-filter" novalidate data-plp-zip-code>
+          <div class="wfl-plp-zip">
+            <h3 class="wfl-plp-zip__headline">Refine Results</h3>
+            <div class="wlf-plp-zip__input">
+              <input type="text" name="zip" class="input w-full" placeholder="Recipient Zip Code" data-zip-input>
+            </div>
+            <div class="wfl-plp-zip__action">
+              <button type="button" class="btn btn--secondary w-full" aria-label="Refine results" data-refine-btn>
+                Refine
+              </button>
+            </div>
+          </div>
+        </form>
+      </fdt-zip-code-filter>
+    `
+    document.addEventListener('findter-app-initializing', () => {
+      window.templates.FilterTreeTemplate = (filterTrees = []) => {
+        const hasShippingType = filterTrees.some(filter => filter.source === "metafield_custom_shipping_type");
+        const optionsHTML = window.templates.FilterOptionsTemplate(filterTrees);
+        const zipCodeElement = hasShippingType ? zipCodeFilter : '';
+        const collectionSearchHTML = window.templates.CollectionSearchTemplate();
+        const { stripNewLines } = window.templates.HelperTemplate;
+        const html = `
+          <div class="search-filters__filter-wrapper">
+            <div class="search-filters__filter-tree-wrapper">
+              <div id="FacetFiltersForm">
+                <input name="options[prefix]" type="hidden" value="last">
+                <div class="search-filters__filter-tree-content">
+                  <div class="search-filters__filter-tree-option-list">
+                    ${zipCodeElement}
+                    <div class="search-filters__collection-search">${collectionSearchHTML}</div>
+                    ${optionsHTML}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        return stripNewLines(html);
+      };
+
+      window.templates.FilterTreeOffcanvasTemplate = (filterTrees = [], sort, clearAllActive = false) => {
+        const hasShippingType = filterTrees.some(filter => filter.source === "metafield_custom_shipping_type");
+        const optionsHTML = window.templates.FilterOptionsOffcanvasTemplate(filterTrees);
+        const zipCodeElement = hasShippingType ? zipCodeFilter : '';
+        const sortOptionsHTML = window.templates.SortOptionsOffcanvasTemplate(sort);
+        const collectionSearchHTML = window.templates.CollectionSearchTemplate();
+        const { stripNewLines } = window.templates.HelperTemplate;
+        const html = `
+            <div id="FacetFiltersForm" class="fdt-offcanvas-content">
+                <input name="options[prefix]" type="hidden" value="last">
+                <div id="FacetsWrapperMobile" class="search-filters__inner fdt-scrollbar-smooth">
+                    <div class="fdt-offcanvas-content-header-wrapper">
+                        <strong class="fdt-offcanvas-content-header">${window.rdSearchFiltersString.filter.header}</strong>
+                        ${clearAllActive ?
+                            `<filter-tag-all class="search-filters__filter-clear-all">${window.rdSearchFiltersString.filter.clearAll.label}</filter-tag-all>` : ''}
+                    </div>
+                    <div class="fdt-offcanvas-content-content">
+                        <div class="fdt-offcanvas-content-option-list">
+                            ${sortOptionsHTML}
+                            ${zipCodeElement}
+                            ${collectionSearchHTML}
+                            ${optionsHTML}
+                        </div>
+                    </div>
+                    <div class="fdt-offcanvas-content-footer">
+                        <button
+                        type="button"
+                        class="fdt-offcanvas-content-button-primary"
+                        onclick="this.closest('.fdt-offcanvas-controls').querySelector('summary').click()"
+                        >
+                            ${window.rdSearchFiltersString.filter.tree.viewItems.label}
+                        </button>
+                    </div>
+                </div>
+            </div>
+		`;
+        return stripNewLines(html);
+    };
+      const orginalActiveTags = window.templates.FilterTagsTemplate;
+      window.templates.FilterTagsTemplate = (filterOptions = []) => {
+        const newFilterOptions = filterOptions.filter(filter => filter.source != "metafield_custom_shipping_type");
+        return orginalActiveTags(newFilterOptions);
+      }
+
+      {% if template.name == 'collection' %}
+        let defaultSort = 'best_selling';
+        let defaultSortLabel = 'Featured';
+        {% if collection.default_sort_by == 'best-selling' %}
+            defaultSort = 'best_selling';
+            defaultSortLabel = `${window.rdSearchFiltersString.sort.options.best_selling}`;
+        {% endif %}
+        {% if collection.default_sort_by == 'manual' %}
+            defaultSort = 'best_selling';
+            defaultSortLabel = 'Featured';
+        {% endif %}
+        window.fdtSortOption = {
+          current: {key: defaultSort, label: defaultSortLabel},
+          options: [
+                ...(defaultSort === 'best_selling' ? [{
+                    key: 'best_selling',
+                    label: defaultSortLabel
+                }] : []),
+            {
+                key: 'price_low_high',
+                label: `${window.rdSearchFiltersString.sort.options.priceAsc}`
+            },
+            {
+                key: 'price_high_low',
+                label: `${window.rdSearchFiltersString.sort.options.priceDesc}`
+            },               
+            {
+                key: 'title_asc',
+                label: `Alphabetically, A-Z`
+            },
+            {
+                key: 'title_desc',
+                label: `Alphabetically, Z-A`
+            }
+          ],
+        };
+      {% else %}
+        window.fdtSortOption = {
+            current: {key: 'relevance', label: `${window.rdSearchFiltersString.sort.options.relevance}`},
+            options: [
+                {
+                    key: 'relevance',
+                    label: `${window.rdSearchFiltersString.sort.options.relevance}`
+                },
+                {
+                    key: 'price_low_high',
+                    label: `${window.rdSearchFiltersString.sort.options.priceAsc}`
+                },
+                {
+                    key: 'price_high_low',
+                    label: `${window.rdSearchFiltersString.sort.options.priceDesc}`
+                },               
+                {
+                    key: 'title_asc',
+                    label: `Alphabetically, A-Z`
+                },
+                {
+                    key: 'title_desc',
+                    label: `Alphabetically, Z-A`
+                }
+            ],    
+        };
+      {% endif %}
+    });
+  })();
+</script>
+  <style>
+    #fdt-container .jdgm-prev-badge__text {
+      margin-left: 4px;
+    }
+
+    #fdt-container .jdgm-qa-badge {
+      display: none;
+    }
+
+    #fdt-container .search-filters__product-list .search-filters__product-info {
+      gap: 5px;
+    }
+
+    #fdt-container .card__swatches {
+      padding: 0;
+    }
+  </style>
+
+  <script>
+    document.addEventListener('findter-app-initializing', () => {
+      const { stripNewLines, escapeHTML, formatPrice } = window.templates.HelperTemplate;
+      window.templates.PriceTemplate = product => {
+        const min = Number(product?.priceMin || 0);
+        const max = Number(product?.priceMax || 0);
+        const compareAtMin = Number(product?.compareAtPriceMin || 0);
+        const comparePrice = compareAtMin > min ? formatPrice(compareAtMin) : '';
+        const price = min < max ? `From ${formatPrice(min)}` : formatPrice(min);
+
+        return stripNewLines(`
+          <div class="search-filters__product-price-wrapper" data-product="${product.id}">
+            <span aria-hidden="true" class="search-filters__product-price-content search-filters__product-price-content--text-align-left">
+              <span class="${comparePrice ? '' : 'fdt-hidden '}search-filters__format-currency search-filters__format-currency--price-compare search-filters__product-price--compare">
+                <span class="search-filters__format-currency">${comparePrice}</span>
+              </span>
+              <span class="search-filters__product-price--main ${product.onSale ? 'search-filters__product-price--sale' : 'search-filters__product-price--default'}">
+                <span class="search-filters__format-currency">${price}</span>
+              </span>
+              <span aria-hidden="true" class="fdt-hidden search-filters__product-price--saving">
+                <span class="search-filters__format-currency"></span>
+              </span>
+            </span>
+          </div>
+        `);
+      };
+
+      window.templates.ProductCardInfoBeforePrice = product => {
+        const id = String(product.id).replace('gid://shopify/Product/', '');
+        const variants = Array.isArray(product?.variants) ? product.variants : [];
+        const used = new Set();
+
+        const swatches = variants.map((variant, index) => {
+          const colorOption = (variant.selectedOptions || []).find(option =>
+            ['color', 'colour'].includes(String(option.name || '').toLowerCase())
+          );
+          const color = colorOption?.value;
+          const image = variant.image?.url;
+          const variantId = String(variant.id || '').replace('gid://shopify/ProductVariant/', '');
+
+          if (!color || !image) return '';
+          if (used.has(color.toLowerCase())) return '';
+          used.add(color.toLowerCase());
+
+          const inputId = `fdt-color-opt-${id}-${index}`;
+          const inputName = `fdt-color-option-${id}`;
+          const checked = String(product.selected_or_first_available_variant || '').includes(variantId);
+
+          return `
+            <input
+              type="radio"
+              class="opt-btn visually-hidden js-option"
+              name="${inputName}"
+              id="${inputId}"
+              value="${escapeHTML(color)}"
+              data-image="${escapeHTML(image)}"
+              ${checked ? 'checked' : ''}
+            >
+            <label
+              class="opt-label opt-label--swatch relative swatch-shape--circle"
+              title="${escapeHTML(color)}"
+              data-swatch="${escapeHTML(color.toLowerCase())}"
+              for="${inputId}"
+            >
+              <span class="visually-hidden">${escapeHTML(color)}</span>
+            </label>
+          `;
+        }).filter(Boolean).join('');
+
+        return stripNewLines(`
+          ${product.metafield_judgeme_badge ? `<div style='jdgm-widget jdgm-preview-badge' class='jdgm-widget jdgm-preview-badge' data-id='${product.id.replace('gid://shopify/Product/', '')}' data-auto-install='false'>${product.metafield_judgeme_badge}</div>` : ''}
+          ${swatches ? `<div class="card__swatches mt-2 pb-1 pt-3 flex items-start relative">${swatches}</div>` : ''}
+        `);
+      };
+    });
+
+    document.addEventListener('change', event => {
+      const input = event.target.closest('#fdt-container .card__swatches .opt-btn');
+      if (!input) return;
+
+      const card = input.closest('.search-filters__product-item, .search-filters__product');
+      const image = card?.querySelector('.search-filters__product-image-img:not(.img--second)');
+      const secondImage = card?.querySelector('.search-filters__product-image-img.img--second');
+      const nextSrc = input.dataset.image;
+
+      if (!nextSrc) return;
+
+      if (image) {
+        image.src = nextSrc;
+        image.srcset = '';
+      }
+
+      if (secondImage) {
+        secondImage.src = nextSrc;
+        secondImage.srcset = '';
+      }
+    });
+  </script>
+{% endif %}

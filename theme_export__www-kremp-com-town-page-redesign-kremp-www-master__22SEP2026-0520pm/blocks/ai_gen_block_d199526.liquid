@@ -1,0 +1,226 @@
+{% doc %}
+  @prompt
+    Add a custom badge overlay to product cards on the collection page only. The badge should: appear in the lower-right corner of the product image, display text stored in a product metafield called custom.badge_label, use the theme's accent color as the background with white text, have a slightly rounded rectangle shape (not a full pill), and only render when the metafield has a value. The badge should not appear on product detail pages — collection grid cards only. Style it to look premium and not obstruct the main product image significantly.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-custom-badge-{{ ai_gen_id }} {
+    display: block;
+  }
+
+  .ai-custom-badge-wrapper-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: {{ block.settings.badge_offset }}px;
+    right: {{ block.settings.badge_offset }}px;
+    z-index: 2;
+  }
+
+  .ai-custom-badge-label-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: {{ block.settings.badge_padding_vertical }}px {{ block.settings.badge_padding_horizontal }}px;
+    background-color: {{ block.settings.badge_bg_color }};
+    color: {{ block.settings.badge_text_color }};
+    font-size: {{ block.settings.badge_font_size }}px;
+    font-weight: {{ block.settings.badge_font_weight }};
+    line-height: 1.2;
+    border-radius: {{ block.settings.badge_border_radius }}px;
+    text-transform: {{ block.settings.badge_text_transform }};
+    letter-spacing: {{ block.settings.badge_letter_spacing }};
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-custom-badge-label-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.badge_font_size }}px * 0.9);
+      padding: calc({{ block.settings.badge_padding_vertical }}px * 0.85) calc({{ block.settings.badge_padding_horizontal }}px * 0.85);
+    }
+  }
+{% endstyle %}
+
+{% if product.metafields.custom.badge_label != blank %}
+  <custom-badge-{{ ai_gen_id }}
+    class="ai-custom-badge-{{ ai_gen_id }}"
+    {{ block.shopify_attributes }}
+  >
+    <div class="ai-custom-badge-wrapper-{{ ai_gen_id }}">
+      <span class="ai-custom-badge-label-{{ ai_gen_id }}">
+        {{ product.metafields.custom.badge_label }}
+      </span>
+    </div>
+  </custom-badge-{{ ai_gen_id }}>
+{% endif %}
+
+<script>
+  (function() {
+    class CustomBadge{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.style.display = 'block';
+      }
+    }
+
+    customElements.define('custom-badge-{{ ai_gen_id }}', CustomBadge{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Custom badge overlay",
+  "tag": null,
+  "class": "custom-badge-block",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Badge setup"
+    },
+    {
+      "type": "paragraph",
+      "content": "This badge displays text from the product metafield 'custom.badge_label'. Add this metafield to products to show custom badges on collection pages only."
+    },
+    {
+      "type": "header",
+      "content": "Badge style"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Background",
+      "default": "#004275"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "badge_font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "badge_font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "select",
+      "id": "badge_text_transform",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "select",
+      "id": "badge_letter_spacing",
+      "label": "Letter spacing",
+      "options": [
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "0.5px",
+          "label": "Slight"
+        },
+        {
+          "value": "1px",
+          "label": "Wide"
+        }
+      ],
+      "default": "0.5px"
+    },
+    {
+      "type": "header",
+      "content": "Badge dimensions"
+    },
+    {
+      "type": "range",
+      "id": "badge_padding_vertical",
+      "label": "Vertical padding",
+      "min": 4,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "badge_padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "badge_border_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "badge_offset",
+      "label": "Distance from corner",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom badge overlay"
+    }
+  ]
+}
+{% endschema %}

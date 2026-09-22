@@ -54,7 +54,7 @@
     {% endif %}
   >
     {% if title %}
-      <h3 class="quick-nav__heading h5 text-center mb-6">{{ title }}</h3>
+      <h2 class="quick-nav__heading h5 text-center mb-6">{{ title }}</h2>
     {% endif %}
     {%- liquid
       render 'quick-nav-select', component_id: component_id, menu: menu, use_product_image: use_product_image, level: 1, display: menu_1_display, boxed: menu_1_boxed, default_text: menu_1_text, image_ratio: image_ratio, image_fit: image_fit
@@ -83,7 +83,7 @@
       {% if color_scheme == 'default' %}
         style="--btn-bg-color: var(--btn-bg-color-og); --btn-text-color: var(--btn-text-color-og)"
       {% endif %}
-      aria-disabled="true"
+      
     >
       {{ 'general.quick_navigation_panel.button_label' | t }}
     </a>

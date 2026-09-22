@@ -228,7 +228,7 @@
                   <div class="text-overlay{% if bg_color %} text-overlay--bg{% endif %} {{ block.settings.overlay_text_align }}{% if block.settings.mob_center_text %} md-down:text-center{% endif %}{% if section.settings.color_scheme != "white" %}{% if section.settings.full_width %} md-down:p-xl h-full md:h-auto{% endif %}{% endif %} has-motion">
                     {%- if block.settings.subheading != blank -%}
                       <p class="text-overlay__block subheading">
-                        {{- block.settings.subheading | escape -}}
+                        {{- block.settings.subheading | escape -}} 
                       </p>
                     {%- endif -%}
 
